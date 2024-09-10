@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,6 +26,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final List<String> _messages = [];
   final TextEditingController _textController = TextEditingController();
+  File? _selectedFile;
 
   // Method to handle message sending
   void _handleSubmitted(String text) {
@@ -33,12 +36,34 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  // Method to build the text input area
+  // Method to pick a PDF file
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result != null) {
+      setState(() {
+        _selectedFile = File(result.files.single.path!);
+        print("File selected: ${_selectedFile!.path}");
+      });
+    } else {
+      // User canceled the picker
+      print("File pick cancelled");
+    }
+  }
+
+  // Method to build the text input area with a file picker button
   Widget _buildTextComposer() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8.0),
       child: Row(
         children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.attach_file),
+            onPressed: _pickFile, // Open file picker when pressed
+          ),
           Flexible(
             child: TextField(
               controller: _textController,
@@ -61,14 +86,14 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  // api call to fetch documents
+  // Simulate API call to fetch suggestions
   Future<List<String>> _fetchSuggestions() async {
     await Future.delayed(Duration(seconds: 1)); // Simulate network delay
     return [
       'Suggestion A',
       'Suggestion B',
       'Suggestion C'
-    ]; //use actual api here
+    ]; // Replace with actual API response
   }
 
   @override
