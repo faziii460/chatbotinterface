@@ -61,14 +61,14 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  // Simulate API call to fetch suggestions
+  // api call to fetch documents
   Future<List<String>> _fetchSuggestions() async {
     await Future.delayed(Duration(seconds: 1)); // Simulate network delay
     return [
       'Suggestion A',
       'Suggestion B',
       'Suggestion C'
-    ]; // Replace with actual API response
+    ]; //use actual api here
   }
 
   @override
